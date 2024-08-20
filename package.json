@@ -13,6 +13,7 @@
     "@gluestack-style/react": "^1.0.57",
     "@gluestack-ui/config": "^1.1.19",
     "@gluestack-ui/themed": "^1.1.34",
+    "@react-navigation/native": "^6.1.18",
     "expo": "~51.0.26",
     "expo-font": "~12.0.9",
     "expo-status-bar": "~1.12.1",
