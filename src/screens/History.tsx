@@ -4,7 +4,7 @@ import React from "react"
 export function History() {
   return (
     <Center flex={1}>
-      <Text>History</Text>
+      <Text color="$white">History</Text>
     </Center>
   )
 }
