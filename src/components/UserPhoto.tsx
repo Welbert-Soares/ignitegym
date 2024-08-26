@@ -10,7 +10,6 @@ export function UserPhoto({ ...rest }: Props) {
       borderWidth="$2"
       borderColor="$gray400"
       backgroundColor="$gray500"
-      gap="$4"
       {...rest}
     />
   )
