@@ -8,6 +8,8 @@ import {
   ScrollView,
 } from "@gluestack-ui/themed"
 import { useForm, Controller } from "react-hook-form"
+import { yupResolver } from "@hookform/resolvers/yup"
+import * as yup from "yup"
 
 import BackgroundImg from "@assets/background.png"
 import Logo from "@assets/logo.svg"
@@ -22,12 +24,19 @@ type FormDataProps = {
   passwordConfirm: string
 }
 
+const signUpSchema = yup.object({
+  name: yup.string().required("Nome é obrigatório."),
+  email: yup.string().required("Informe o e-mail").email("E-mail inválido"),
+})
+
 export const SignUp = () => {
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormDataProps>()
+  } = useForm<FormDataProps>({
+    resolver: yupResolver(signUpSchema) as any,
+  })
 
   const navigation = useNavigation()
   function handleGoBack() {
@@ -73,7 +82,6 @@ export const SignUp = () => {
             <Controller
               control={control}
               name="name"
-              rules={{ required: "Nome é obrigatório." }}
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder="Nome"
@@ -87,13 +95,6 @@ export const SignUp = () => {
             <Controller
               control={control}
               name="email"
-              rules={{
-                required: "E-mail é obrigatório",
-                pattern: {
-                  value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i,
-                  message: "E-mail inválido",
-                },
-              }}
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder="E-mail"
