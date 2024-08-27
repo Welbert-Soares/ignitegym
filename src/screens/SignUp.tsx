@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { useNavigation } from "@react-navigation/native"
 import {
   Center,
@@ -7,7 +6,6 @@ import {
   Text,
   VStack,
   ScrollView,
-  onChange,
 } from "@gluestack-ui/themed"
 import { useForm, Controller } from "react-hook-form"
 
@@ -18,14 +16,16 @@ import { Input } from "@components/Input"
 import { Button } from "@components/Button"
 
 export const SignUp = () => {
-  const { control } = useForm()
+  const { control, handleSubmit } = useForm()
 
   const navigation = useNavigation()
   function handleGoBack() {
     navigation.goBack()
   }
 
-  function handleSignUp() {}
+  function handleSignUp(data: any) {
+    console.log(data)
+  }
 
   return (
     <ScrollView
@@ -102,11 +102,16 @@ export const SignUp = () => {
                   secureTextEntry
                   onChangeText={onChange}
                   value={value}
+                  onSubmitEditing={handleSubmit(handleSignUp)}
+                  returnKeyType="send"
                 />
               )}
             />
 
-            <Button title="Criar e acessar" onPress={handleSignUp} />
+            <Button
+              title="Criar e acessar"
+              onPress={handleSubmit(handleSignUp)}
+            />
           </Center>
 
           <Button
