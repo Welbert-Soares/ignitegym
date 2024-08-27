@@ -43,7 +43,7 @@ export const SignUp = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormDataProps>({
-    resolver: yupResolver(signUpSchema) as any,
+    resolver: yupResolver(signUpSchema),
   })
 
   const navigation = useNavigation()
