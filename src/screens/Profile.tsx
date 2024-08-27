@@ -2,6 +2,7 @@ import { useState } from "react"
 import { ScrollView, TouchableOpacity } from "react-native"
 import { VStack, Text, Center, Heading } from "@gluestack-ui/themed"
 import * as ImagePicker from "expo-image-picker"
+import * as FileSystem from "expo-file-system"
 
 import { ScreenHeader } from "@components/ScreenHeader"
 import { UserPhoto } from "@components/UserPhoto"
@@ -24,7 +25,16 @@ export function Profile() {
       return
     }
 
-    setUserPhoto(photoSelected.assets[0].uri)
+    const photoURI = photoSelected.assets[0].uri
+
+    if (photoURI) {
+      const photoInfo = (await FileSystem.getInfoAsync(photoURI)) as {
+        size: number
+      }
+
+      console.log(photoInfo)
+      setUserPhoto(photoURI)
+    }
   }
   return (
     <VStack flex={1}>
