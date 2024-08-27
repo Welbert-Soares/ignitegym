@@ -1,6 +1,13 @@
 import { TouchableOpacity } from "react-native"
 import { ArrowLeft } from "lucide-react-native"
-import { VStack, Icon, HStack, Heading, Text } from "@gluestack-ui/themed"
+import {
+  VStack,
+  Icon,
+  HStack,
+  Heading,
+  Text,
+  Image,
+} from "@gluestack-ui/themed"
 import { useNavigation } from "@react-navigation/native"
 
 import { AppNavigatorRoutesProps } from "../../routes/app.routes"
@@ -43,6 +50,20 @@ export function Exercise() {
             </Text>
           </HStack>
         </HStack>
+      </VStack>
+
+      <VStack p="$8">
+        <Image
+          source={{
+            uri: "https://blog.totalpass.com.br/wp-content/uploads/2022/12/treino-de-costas-remada-unilateral.jpg",
+          }}
+          alt="Imagem do exercício"
+          mb="$3"
+          resizeMode="cover"
+          rounded="$lg"
+          w="$full"
+          h="$80"
+        />
       </VStack>
     </VStack>
   )
