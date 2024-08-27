@@ -9,12 +9,18 @@ import { Input } from "@components/Input"
 
 export function Profile() {
   const handleUserPhotoSelect = async () => {
-    await ImagePicker.launchImageLibraryAsync({
+    const photoSelected = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
       aspect: [4, 4],
       allowsEditing: true,
     })
+
+    if (photoSelected.canceled) {
+      return
+    }
+
+    console.log(photoSelected.assets[0])
   }
   return (
     <VStack flex={1}>
