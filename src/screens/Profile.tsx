@@ -14,26 +14,35 @@ export function Profile() {
     "https://github.com/Welbert-Soares.png"
   )
   const handleUserPhotoSelect = async () => {
-    const photoSelected = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-      aspect: [4, 4],
-      allowsEditing: true,
-    })
+    try {
+      const photoSelected = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 1,
+        aspect: [4, 4],
+        allowsEditing: true,
+      })
 
-    if (photoSelected.canceled) {
-      return
-    }
-
-    const photoURI = photoSelected.assets[0].uri
-
-    if (photoURI) {
-      const photoInfo = (await FileSystem.getInfoAsync(photoURI)) as {
-        size: number
+      if (photoSelected.canceled) {
+        return
       }
 
-      console.log(photoInfo)
-      setUserPhoto(photoURI)
+      const photoURI = photoSelected.assets[0].uri
+
+      if (photoURI) {
+        const photoInfo = (await FileSystem.getInfoAsync(photoURI)) as {
+          size: number
+        }
+
+        if (photoInfo.size && photoInfo.size / 1024 / 1024 > 5) {
+          return alert(
+            "Essa imagem é muito grande. A imagem deve ter no máximo 5MB"
+          )
+        }
+
+        setUserPhoto(photoURI)
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
   return (
