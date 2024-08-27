@@ -23,7 +23,11 @@ type FormDataProps = {
 }
 
 export const SignUp = () => {
-  const { control, handleSubmit } = useForm<FormDataProps>()
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormDataProps>()
 
   const navigation = useNavigation()
   function handleGoBack() {
@@ -69,6 +73,7 @@ export const SignUp = () => {
             <Controller
               control={control}
               name="name"
+              rules={{ required: "Nome é obrigatório." }}
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder="Nome"
@@ -77,6 +82,10 @@ export const SignUp = () => {
                 />
               )}
             />
+
+            {errors.name?.message && (
+              <Text color="$white">{errors.name?.message}</Text>
+            )}
 
             <Controller
               control={control}
