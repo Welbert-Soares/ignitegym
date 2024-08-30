@@ -8,7 +8,7 @@ import {
 } from "@gluestack-ui/themed"
 import { useNavigation } from "@react-navigation/native"
 
-import { AuthNavigatorRoutesProps } from "../../routes/auth.routes"
+import { AuthNavigatorRoutesProps } from "@routes/auth.routes"
 
 import BackgroundImg from "@assets/background.png"
 import Logo from "@assets/logo.svg"

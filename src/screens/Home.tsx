@@ -7,7 +7,7 @@ import { HomeHeader } from "@components/HomeHeader"
 import { Group } from "@components/Group"
 import { ExerciseCard } from "@components/ExerciseCard"
 
-import { AppNavigatorRoutesProps } from "../../routes/app.routes"
+import { AppNavigatorRoutesProps } from "@routes/app.routes"
 
 export function Home() {
   const [exercises, setExercises] = useState([

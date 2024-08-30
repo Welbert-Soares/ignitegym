@@ -11,7 +11,7 @@ import {
 } from "@gluestack-ui/themed"
 import { useNavigation } from "@react-navigation/native"
 
-import { AppNavigatorRoutesProps } from "../../routes/app.routes"
+import { AppNavigatorRoutesProps } from "@routes/app.routes"
 
 import BodySvg from "@assets/body.svg"
 import SeriesSvg from "@assets/series.svg"
