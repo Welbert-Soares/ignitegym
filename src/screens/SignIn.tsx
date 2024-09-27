@@ -6,6 +6,7 @@ import {
   Text,
   VStack,
   ScrollView,
+  useToast,
 } from "@gluestack-ui/themed"
 import { useNavigation } from "@react-navigation/native"
 
@@ -18,6 +19,8 @@ import BackgroundImg from "@assets/background.png"
 
 import { Input } from "@components/Input"
 import { Button } from "@components/Button"
+import { AppError } from "@utils/AppError"
+import { ToastMessage } from "@components/ToastMessage"
 
 type FormData = {
   email: string
@@ -28,6 +31,7 @@ export const SignIn = () => {
   const { signIn } = useAuth()
 
   const navigation = useNavigation<AuthNavigatorRoutesProps>()
+  const toast = useToast()
 
   const {
     control,
@@ -39,8 +43,27 @@ export const SignIn = () => {
     navigation.navigate("signUp")
   }
 
-  function handleSignIn({ email, password }: FormData) {
-    signIn(email, password)
+  async function handleSignIn({ email, password }: FormData) {
+    try {
+      await signIn(email, password)
+    } catch (error) {
+      const isAppError = error instanceof AppError
+
+      const title = isAppError
+        ? error.message
+        : "Não foi possível realizar o login."
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <ToastMessage
+            title={title}
+            action="error"
+            id={id}
+            onClose={() => toast.close(id)}
+          />
+        ),
+      })
+    }
   }
 
   return (
