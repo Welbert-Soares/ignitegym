@@ -2,7 +2,7 @@ import {
   createBottomTabNavigator,
   BottomTabNavigationProp,
 } from "@react-navigation/bottom-tabs"
-import { gluestackUIConfig } from "../config/gluestack-ui.config"
+import { gluestackUIConfig } from "../../config/gluestack-ui.config"
 import { Platform } from "react-native"
 
 import HomeSvg from "@assets/home.svg"
