@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import {
   Center,
@@ -28,6 +29,8 @@ type FormData = {
 }
 
 export const SignIn = () => {
+  const [isLoading, setIsLoading] = useState(false)
+
   const { signIn } = useAuth()
 
   const navigation = useNavigation<AuthNavigatorRoutesProps>()
@@ -45,6 +48,8 @@ export const SignIn = () => {
 
   async function handleSignIn({ email, password }: FormData) {
     try {
+      setIsLoading(true)
+
       await signIn(email, password)
     } catch (error) {
       const isAppError = error instanceof AppError
@@ -52,6 +57,9 @@ export const SignIn = () => {
       const title = isAppError
         ? error.message
         : "Não foi possível realizar o login."
+
+      setIsLoading(false)
+
       toast.show({
         placement: "top",
         render: ({ id }) => (
@@ -122,7 +130,11 @@ export const SignIn = () => {
               )}
             />
 
-            <Button title="Acessar" onPress={handleSubmit(handleSignIn)} />
+            <Button
+              title="Acessar"
+              onPress={handleSubmit(handleSignIn)}
+              isLoading={isLoading}
+            />
           </Center>
           <Center flex={1} justifyContent="flex-end" mt="$4">
             <Text color="$gray100" fontSize="$sm" mb="$3" fontFamily="$body">
