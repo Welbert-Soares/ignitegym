@@ -2,8 +2,10 @@ import { useState } from "react"
 import { ScrollView, TouchableOpacity } from "react-native"
 import { VStack, Text, Center, Heading, useToast } from "@gluestack-ui/themed"
 import { Controller, useForm } from "react-hook-form"
+import { yupResolver } from "@hookform/resolvers/yup"
 import * as ImagePicker from "expo-image-picker"
 import * as FileSystem from "expo-file-system"
+import * as yup from "yup"
 
 import { useAuth } from "@hooks/useAuth"
 
@@ -21,6 +23,30 @@ type FormDataProps = {
   confirm_password: string
 }
 
+const profileSchema = yup.object({
+  name: yup.string().required("Informe o nome."),
+
+  password: yup
+    .string()
+    .min(6, "A senha deve ter no mínimo 6 caracteres.")
+    .nullable()
+    .transform((value) => (!!value ? value : null)),
+
+  confirm_password: yup
+    .string()
+    .nullable()
+    .transform((value) => (!!value ? value : null))
+    .oneOf([yup.ref("password"), null], "As senhas não coincidem.")
+    .when("password", {
+      is: (Field: any) => Field,
+      then: yup
+        .string()
+        .nullable()
+        .required("Confirme a senha.")
+        .transform((value) => (!!value ? value : null)),
+    }),
+})
+
 export function Profile() {
   const [userPhoto, setUserPhoto] = useState(
     "https://github.com/Welbert-Soares.png"
@@ -28,11 +54,16 @@ export function Profile() {
 
   const toast = useToast()
   const { user } = useAuth()
-  const { control, handleSubmit } = useForm<FormDataProps>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormDataProps>({
     defaultValues: {
       name: user.name,
       email: user.email,
     },
+    resolver: yupResolver(profileSchema),
   })
 
   const handleUserPhotoSelect = async () => {
@@ -114,6 +145,7 @@ export function Profile() {
                   bg="$gray600"
                   onChangeText={onChange}
                   value={value}
+                  errorMenssage={errors.name?.message}
                 />
               )}
             />
@@ -167,6 +199,7 @@ export function Profile() {
                   bg="$gray600"
                   secureTextEntry
                   onChangeText={onChange}
+                  errorMenssage={errors.password?.message}
                 />
               )}
             />
@@ -180,6 +213,7 @@ export function Profile() {
                   bg="$gray600"
                   secureTextEntry
                   onChangeText={onChange}
+                  errorMenssage={errors.confirm_password?.message}
                 />
               )}
             />
