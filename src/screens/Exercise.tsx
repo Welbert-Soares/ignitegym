@@ -28,18 +28,21 @@ import RepetitionsSvg from "@assets/repetitions.svg"
 import { ToastMessage } from "@components/ToastMessage"
 import { Button } from "@components/Button"
 import { Loading } from "@components/Loading"
+import { useAuth } from "@hooks/useAuth"
 
 type RouteParamsProps = {
   exerciseId: string
 }
 
 export function Exercise() {
+  const [sendingRegister, setSendingRegister] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [exercise, setExercise] = useState<ExerciseDTO>()
   const navigation = useNavigation<AppNavigatorRoutesProps>()
 
   const route = useRoute()
   const toast = useToast()
+  const { user } = useAuth()
 
   const { exerciseId } = route.params as RouteParamsProps
 
@@ -72,6 +75,47 @@ export function Exercise() {
       })
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleExerciseHistoryRequest = async () => {
+    try {
+      setSendingRegister(true)
+
+      await api.post("/history", { exercise_id: exerciseId })
+
+      const title = `Tá pago! Salvo no histórico ${user.name}.`
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            action="success"
+            title={title}
+            onClose={() => toast.close(id)}
+          />
+        ),
+      })
+
+      navigation.navigate("history")
+    } catch (error) {
+      const isAppError = error instanceof AppError
+      const title = isAppError
+        ? error.message
+        : "Não foi possível registrar o exercício."
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            action="error"
+            title={title}
+            onClose={() => toast.close(id)}
+          />
+        ),
+      })
+    } finally {
+      setSendingRegister(false)
     }
   }
 
@@ -154,7 +198,11 @@ export function Exercise() {
                 </HStack>
               </HStack>
 
-              <Button title="Marcar como realizado" />
+              <Button
+                title="Marcar como realizado"
+                isLoading={sendingRegister}
+                onPress={handleExerciseHistoryRequest}
+              />
             </Box>
           </VStack>
         </ScrollView>
