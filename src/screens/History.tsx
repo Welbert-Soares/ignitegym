@@ -4,6 +4,7 @@ import { SectionList } from "react-native"
 import { Heading, Text, useToast, VStack } from "@gluestack-ui/themed"
 
 import { api } from "@services/api"
+import { HistoryByDayDTO } from "@dtos/HistoryByDayDTO"
 
 import { ScreenHeader } from "@components/ScreenHeader"
 import { HistoryCard } from "@components/HistoryCard"
@@ -13,16 +14,7 @@ import { AppError } from "@utils/AppError"
 
 export function History() {
   const [isLoading, setIsLoading] = useState(true)
-  const [exercises, setExercises] = useState([
-    {
-      title: "22.07.24",
-      data: ["Remada Unilateral", "Desenvolvimento"],
-    },
-    {
-      title: "23.07.24",
-      data: ["Rosca Direta"],
-    },
-  ])
+  const [exercises, setExercises] = useState<HistoryByDayDTO[]>([])
 
   const toast = useToast()
 
@@ -31,7 +23,7 @@ export function History() {
       setIsLoading(true)
 
       const response = await api.get("/history")
-      console.log(response.data)
+      setExercises(response.data)
     } catch (error) {
       const isAppError = error instanceof AppError
       const title = isAppError
@@ -65,7 +57,7 @@ export function History() {
 
       <SectionList
         sections={exercises}
-        keyExtractor={(item) => item}
+        keyExtractor={(item) => item.id}
         renderItem={() => <HistoryCard />}
         renderSectionHeader={({ section }) => (
           <Heading
