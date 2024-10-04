@@ -9,6 +9,9 @@ import * as yup from "yup"
 
 import { useAuth } from "@hooks/useAuth"
 
+import { AppError } from "@utils/AppError"
+import { api } from "@services/api"
+
 import { ScreenHeader } from "@components/ScreenHeader"
 import { UserPhoto } from "@components/UserPhoto"
 import { Button } from "@components/Button"
@@ -48,6 +51,7 @@ const profileSchema = yup.object({
 })
 
 export function Profile() {
+  const [isUpdating, setUpdating] = useState(false)
   const [userPhoto, setUserPhoto] = useState(
     "https://github.com/Welbert-Soares.png"
   )
@@ -109,7 +113,42 @@ export function Profile() {
   }
 
   const handleProfileUpdate = async (data: FormDataProps) => {
-    console.log(data)
+    try {
+      setUpdating(true)
+
+      await api.put("/users", data)
+
+      const title = "Perfil atualizado com sucesso."
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            action="success"
+            title={title}
+            onClose={() => toast.close(id)}
+          />
+        ),
+      })
+    } catch (error) {
+      const isAppError = error instanceof AppError
+      const title = isAppError
+        ? error.message
+        : "Não foi possível atualizar dados do perfil."
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            action="error"
+            title={title}
+            onClose={() => toast.close(id)}
+          />
+        ),
+      })
+    } finally {
+      setUpdating(false)
+    }
   }
 
   return (
@@ -221,6 +260,7 @@ export function Profile() {
             <Button
               title="Atualizar"
               onPress={handleSubmit(handleProfileUpdate)}
+              isLoading={isUpdating}
             />
           </Center>
         </Center>
