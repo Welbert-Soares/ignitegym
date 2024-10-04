@@ -1,11 +1,18 @@
-import { useState } from "react"
+import { useCallback, useState } from "react"
+import { useFocusEffect } from "@react-navigation/native"
 import { SectionList } from "react-native"
-import { Heading, Text, VStack } from "@gluestack-ui/themed"
+import { Heading, Text, useToast, VStack } from "@gluestack-ui/themed"
+
+import { api } from "@services/api"
 
 import { ScreenHeader } from "@components/ScreenHeader"
 import { HistoryCard } from "@components/HistoryCard"
+import { ToastMessage } from "@components/ToastMessage"
+
+import { AppError } from "@utils/AppError"
 
 export function History() {
+  const [isLoading, setIsLoading] = useState(true)
   const [exercises, setExercises] = useState([
     {
       title: "22.07.24",
@@ -16,6 +23,41 @@ export function History() {
       data: ["Rosca Direta"],
     },
   ])
+
+  const toast = useToast()
+
+  const fetchHistory = async () => {
+    try {
+      setIsLoading(true)
+
+      const response = await api.get("/history")
+      console.log(response.data)
+    } catch (error) {
+      const isAppError = error instanceof AppError
+      const title = isAppError
+        ? error.message
+        : "Não foi possível carregar o histórico."
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            action="error"
+            title={title}
+            onClose={() => toast.close(id)}
+          />
+        ),
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchHistory()
+    }, [])
+  )
 
   return (
     <VStack flex={1}>
