@@ -76,6 +76,11 @@ export function Profile() {
       console.error(error)
     }
   }
+
+  const handleProfileUpdate = async (data: FormDataProps) => {
+    console.log(data)
+  }
+
   return (
     <VStack flex={1}>
       <ScreenHeader title="Perfil" />
@@ -140,15 +145,49 @@ export function Profile() {
           </Heading>
 
           <Center w="$full" gap="$4">
-            <Input placeholder="Senha antiga" bg="$gray600" secureTextEntry />
-            <Input placeholder="Nova senha" bg="$gray600" secureTextEntry />
-            <Input
-              placeholder="Confirme a nova senha"
-              bg="$gray600"
-              secureTextEntry
+            <Controller
+              control={control}
+              name="oldPassword"
+              render={({ field: { onChange } }) => (
+                <Input
+                  placeholder="Senha antiga"
+                  bg="$gray600"
+                  secureTextEntry
+                  onChangeText={onChange}
+                />
+              )}
             />
 
-            <Button title="Atualizar" />
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange } }) => (
+                <Input
+                  placeholder="Nova senha"
+                  bg="$gray600"
+                  secureTextEntry
+                  onChangeText={onChange}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="confirm_password"
+              render={({ field: { onChange } }) => (
+                <Input
+                  placeholder="Confirme a nova senha"
+                  bg="$gray600"
+                  secureTextEntry
+                  onChangeText={onChange}
+                />
+              )}
+            />
+
+            <Button
+              title="Atualizar"
+              onPress={handleSubmit(handleProfileUpdate)}
+            />
           </Center>
         </Center>
       </ScrollView>
