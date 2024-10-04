@@ -10,6 +10,8 @@ import {
 
 import { TouchableOpacity, TouchableOpacityProps } from "react-native"
 
+import { api } from "@services/api"
+
 import { ExerciseDTO } from "@dtos/ExerciseDTO"
 
 type Props = TouchableOpacityProps & {
@@ -29,7 +31,7 @@ export function ExerciseCard({ data, ...rest }: Props) {
       >
         <Image
           source={{
-            uri: "https://blog.totalpass.com.br/wp-content/uploads/2022/12/treino-de-costas-remada-unilateral.jpg",
+            uri: `${api.defaults.baseURL}/exercise/thumb/${data.thumb}`,
           }}
           alt="Imagem do exercício"
           w="$16"
