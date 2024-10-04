@@ -5,6 +5,7 @@ import { Heading, HStack, Text, VStack, useToast } from "@gluestack-ui/themed"
 
 import { api } from "@services/api"
 import { AppError } from "@utils/AppError"
+import { ExerciseDTO } from "@dtos/ExerciseDTO"
 
 import { HomeHeader } from "@components/HomeHeader"
 import { Group } from "@components/Group"
@@ -14,7 +15,7 @@ import { AppNavigatorRoutesProps } from "@routes/app.routes"
 import { ToastMessage } from "@components/ToastMessage"
 
 export function Home() {
-  const [exercises, setExercises] = useState([])
+  const [exercises, setExercises] = useState<ExerciseDTO[]>([])
   const [groups, setGroups] = useState<string[]>([])
   const [groupSelected, setGroupSelected] = useState("Costas")
 
@@ -51,7 +52,7 @@ export function Home() {
   const fetchExercisesByGroups = async () => {
     try {
       const response = await api.get(`/exercises/bygroup/${groupSelected}`)
-      console.log(response.data)
+      setExercises(response.data)
     } catch (error) {
       const isAppError = error instanceof AppError
       const title = isAppError
@@ -114,7 +115,7 @@ export function Home() {
 
         <FlatList
           data={exercises}
-          keyExtractor={(item) => item}
+          keyExtractor={(item) => item.id}
           renderItem={() => (
             <ExerciseCard onPress={handleOpenExerciseDetails} />
           )}
