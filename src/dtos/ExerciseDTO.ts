@@ -1,6 +1,5 @@
 
 export type ExerciseDTO =
-
   {
     id: string
     demo: string
