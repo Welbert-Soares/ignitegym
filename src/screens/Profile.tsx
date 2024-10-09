@@ -105,7 +105,15 @@ export function Profile() {
           })
         }
 
-        setUserPhoto(photoURI)
+        const fileExtension = photoURI.split(".").pop()
+
+        const photoProfile = {
+          name: `${user.name}.${fileExtension}`.toLowerCase(),
+          uri: photoURI,
+          type: `image/${fileExtension}`,
+        }
+
+        console.log(photoProfile)
       }
     } catch (error) {
       console.error(error)
