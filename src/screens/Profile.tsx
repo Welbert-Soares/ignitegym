@@ -21,9 +21,9 @@ import { ToastMessage } from "@components/ToastMessage"
 type FormDataProps = {
   name: string
   email: string
-  password: string
-  oldPassword: string
-  confirm_password: string
+  oldPassword?: string // opcional
+  password?: string | null // igual ao yup
+  confirm_password?: string | null // igual ao yup
 }
 
 const profileSchema = yup.object({
@@ -57,7 +57,7 @@ export function Profile() {
   )
 
   const toast = useToast()
-  const { user } = useAuth()
+  const { user, updateUserProfile } = useAuth()
   const {
     control,
     handleSubmit,
@@ -116,7 +116,12 @@ export function Profile() {
     try {
       setUpdating(true)
 
+      const userUpdated = user
+      userUpdated.name = data.name
+
       await api.put("/users", data)
+
+      await updateUserProfile(userUpdated)
 
       const title = "Perfil atualizado com sucesso."
       toast.show({
